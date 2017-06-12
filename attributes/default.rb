@@ -93,6 +93,7 @@ default['nginx']['proxy_read_timeout'] = '60'
 default['nginx']['proxy_send_timeout'] = '60'
 default['nginx']['send_timeout'] = '10'
 default['nginx']['enable_upgrade_method'] = false
+default['nginx']['force_elb_ssl'] = false
 
 # framework
 ## common

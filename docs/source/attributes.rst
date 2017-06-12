@@ -470,6 +470,12 @@ nginx
   -  **Default**: ``false``
   -  When set to true, enable Websocket's upgrade method such as Rails actionCable.
 
+-  ``app['webserver']['force_elb_ssl']``
+
+  -  **Supported values:** ``true``, ``false``
+  -  **Default**: ``false``
+  -  When set to true, enable http to https redirect in Nginx with SSL terminating at ELB.
+
 | Since this driver is basically a wrapper for `chef_nginx cookbook`_,
 | you can also configure `node['nginx'] attributes`_
 | as well (notice that ``node['deploy'][<application_shortname>]`` logic
@@ -553,4 +559,3 @@ resque
 .. _node['nginx'] attributes: https://github.com/miketheman/nginx/tree/2.7.x#attributes
 .. |sidekiq.yml config file| replace:: ``sidekiq.yml`` config file
 .. _sidekiq.yml config file: https://github.com/mperham/sidekiq/wiki/Advanced-Options#the-sidekiq-configuration-file
-

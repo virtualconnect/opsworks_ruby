@@ -2,7 +2,7 @@
     <% identifier = "#{@application}-#{n+1}" %>
     <% conf_file = "#{@deploy_to}/shared/config/shoryuken_#{n+1}.yml" %>
     <% pid_file = "#{@deploy_to}/shared/pids/shoryuken_#{identifier}.pid" %>
-    <% syslog = !!@out[:syslog] ? "2>&1 | logger -t shoryuken-#{identifier} -f /var/log/shoryuken.log" : '' %>
+    <% syslog = !!@out[:syslog] ? "2>&1 | logger -t shoryuken-#{identifier}" : '' %>
     <% to_require = @out[:require].present? ? " -r #{File.join(@deploy_to, 'current', @out[:require])}" : '' %>
     <% timeout = (@out[:config]['timeout'] || 8).to_i %>
 

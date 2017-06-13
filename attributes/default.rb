@@ -74,6 +74,7 @@ default['defaults']['webserver']['extra_config'] = ''
 default['defaults']['webserver']['extra_config_ssl'] = ''
 default['defaults']['webserver']['keepalive_timeout'] = '15'
 default['defaults']['webserver']['log_level'] = 'info'
+default['defaults']['webserver']['force_elb_ssl'] = false
 
 ## apache2
 
@@ -93,7 +94,7 @@ default['nginx']['proxy_read_timeout'] = '60'
 default['nginx']['proxy_send_timeout'] = '60'
 default['nginx']['send_timeout'] = '10'
 default['nginx']['enable_upgrade_method'] = false
-default['nginx']['force_elb_ssl'] = false
+
 
 # framework
 ## common

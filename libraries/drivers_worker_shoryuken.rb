@@ -7,6 +7,11 @@ module Drivers
       allowed_engines :shoryuken
       output filter: %i[config process_count require syslog]
       packages 'monit'
+      # package 'monit' do
+      #   package_name 'monit'
+      #   version '1:5.16-2'
+      #   options '--allow-downgrades'
+      # end
 
       def configure
         add_shoryuken_config

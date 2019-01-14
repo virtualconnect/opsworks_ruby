@@ -23,6 +23,37 @@ server {
     }
     <% end %>
 
+    try_files $uri/index.html $uri/index.htm @<%= @name %>;
+  }
+
+  location ^~ /assets/ {
+    gzip_static on;
+    expires max;
+    add_header Cache-Control public;
+    add_header Access-Control-Allow-Origin '*';
+    add_header Access-Control-Allow-Methods 'GET, PUT, POST, DELETE';
+    add_header Access-Control-Allow-Headers 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range';
+    add_header Access-Control-Expose-Headers 'Content-Length,Content-Range';
+  }
+
+  location @<%= @name %> {
+    <% if @out[:force_elb_ssl] %>
+    if ($http_x_forwarded_proto != 'https') {
+      rewrite ^ https://$host$request_uri? permanent;
+    }
+    <% end %>
+
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    <% if @out[:enable_upgrade_method] %>
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    <% end %>
+    proxy_redirect off;
+
+    proxy_read_timeout <%= @out[:proxy_read_timeout] || '60' %>;
+    proxy_send_timeout <%= @out[:proxy_send_timeout] || '60' %>;
+
     #
     # Wide-open CORS config for nginx
     #
@@ -53,36 +84,6 @@ server {
       add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range';
       add_header 'Access-Control-Expose-Headers' 'Content-Length,Content-Range';
     }
-
-    try_files $uri/index.html $uri/index.htm @<%= @name %>;
-  }
-
-  location ^~ /assets/ {
-    gzip_static on;
-    expires max;
-    add_header Cache-Control public;
-    add_header Access-Control-Allow-Origin "$http_origin";
-    add_header Access-Control-Allow-Methods 'GET, PUT, POST, DELETE';
-    add_header Access-Control-Expose-Headers ETag;
-  }
-
-  location @<%= @name %> {
-    <% if @out[:force_elb_ssl] %>
-    if ($http_x_forwarded_proto != 'https') {
-      rewrite ^ https://$host$request_uri? permanent;
-    }
-    <% end %>
-
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header Host $http_host;
-    <% if @out[:enable_upgrade_method] %>
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection "upgrade";
-    <% end %>
-    proxy_redirect off;
-
-    proxy_read_timeout <%= @out[:proxy_read_timeout] || '60' %>;
-    proxy_send_timeout <%= @out[:proxy_send_timeout] || '60' %>;
 
     # If you don't find the filename in the static files
     # Then request it from the <%= @name %> server
